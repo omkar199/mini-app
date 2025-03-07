@@ -17,6 +17,26 @@ export const App = () => {
       setIsMounted(true)
     }, [])
   
+
+    useEffect(() => {
+        if ((window as any).Telegram && (window as any).Telegram.WebApp) {
+          const tg = (window as any).Telegram.WebApp;
+          tg.ready();
+          const user = tg.initDataUnsafe.user;
+          
+          if (user) {
+              console.log("User ID:", user.id);
+              console.log("First Name:", user.first_name);
+              console.log("Last Name:", user.last_name);
+              console.log("Username:", user.username);
+              console.log("Language:", user.language_code);
+              setTelegramUser(user) 
+          } else {
+              console.log("User details not available.");
+          }
+          
+        }
+      }, []);
     useEffect(() => {
       if (!isMounted) return
       
@@ -61,7 +81,7 @@ export const App = () => {
       initializeTelegram()
     }, [isMounted, telegramUser])
   
-   console.log(process.env.NEXT_PUBLIC_ORGANIZATION_ID,"process.env.NEXT_PUBLIC_ORGANIZATION_ID");
+   console.log(process.env.NEXT_PUBLIC_ORGANIZATION_ID,"process.env.NEXT_PUBLIC_ORGANIZATION_ID" ,telegramUser);
    
    
   
@@ -92,7 +112,7 @@ export const App = () => {
               filterValue: userEmail,
             },
           ],
-          'http://localhost:5010/api/get-sub-org-ids'
+          'https://tbotserver.velvetdao.xyz/api/get-sub-org-ids'
         )
   
         console.log(subOrgIds)
@@ -124,7 +144,7 @@ export const App = () => {
               },
             },
           ],
-          'http://localhost:5010/api/create-sub-organization'
+          'https://tbotserver.velvetdao.xyz/api/create-sub-organization'
         )
   
         const delegateUserConfig = [
@@ -145,7 +165,7 @@ export const App = () => {
         const delegateUserResponse = await (turnkey as any).serverSign(
           'addUserToSubOrganization',
           [subOrg.subOrganizationId, delegateUserConfig],
-          'http://localhost:5010/api/create-user'
+          'https://tbotserver.velvetdao.xyz/api/create-user'
         )
   
         console.log(subOrg)
@@ -170,7 +190,7 @@ export const App = () => {
         // }
         console.log('🚀 ~ handleGoogleLogin ~ walletData:', walletData)
   
-        const createWalletResponse = await fetch('http://localhost:5010/api/add-wallet', {
+        const createWalletResponse = await fetch('https://tbotserver.velvetdao.xyz/api/add-wallet', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
