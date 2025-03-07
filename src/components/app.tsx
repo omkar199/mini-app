@@ -171,8 +171,8 @@ export const App = () => {
         console.log(subOrg)
   
         const walletData = {
-          userID: '6690017035',
-          username: 'omkarudhane',
+          userID: (telegramUser as any)?.id,
+          username: (telegramUser as any)?.username,
           walletAddress: subOrg.wallet.addresses[0],
           publicKey: publicKey,
           privateKey: privateKey,
